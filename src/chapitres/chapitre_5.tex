@@ -1,0 +1,133 @@
+Ce chapitre, plutôt court, a pour but de présenter les manipulations que l'on peut faire sur des fichiers extérieurs avec Python.
+
+\section{Ouvrir un fichier}
+	
+	\subsection{Chemins relatif et absolu}
+		
+		Pour ouvrir, lire ou écrire dans un fichier, il faut d'abord savoir où ce fichier est stocké dans la mémoire de l'ordinateur. Chaque fichier peut être trouvé dans un dossier lui-même contenu dans un dossier, et ainsi de suite, jusqu'à ce qu'on atteigne le dossier qui contient tous les autres, qu'on appelle la "racine". La suite de dossiers qui mène de cette racine à un fichier est appelée "chemin" ou "arborescence".
+		
+		\subsubsection{Chemin absolu}
+		Le chemin absolu permet à l'ordinateur de retrouver le fichier voulu indépendemment de l'emplacement du script Python. Il donne en fait la totalité de l'arborescence du fichier depuis la racine. \\
+		
+		Cette méthode est pratique au sens où l'on peut changer de place le script Python sans que cela affecte son fonctionnement. Mais elle a aussi l'inconvénient de ne marcher que sur l'ordinateur sur lequel le script a été programmé. En effet le chemin absolu contient des informations propres à chaque ordinateur (notamment le nom d'utilisateur, ou le nom d'un dossier spécifique). \\
+		
+		Par exemple, on peut imaginer une arborescence comme celle-ci~:
+		\begin{verbatim}
+			/home/utilisateur/Bureau/fichier.txt
+		\end{verbatim}
+		Le caractère \verb|/| au début indique que l'on part de la racine de l'ordinateur, puis dans le dossier \verb|home|, puis \verb|utilisateur|, \verb|Bureau| et enfin, on s'intéresse au fichier \verb|fichier.txt|
+	
+		\subsubsection{Chemin relatif} \label{chemin_relatif}
+		Le chemin relatif ne part pas de la racine, mais de l'emplacement du script Python. Cette méthode a l'avantage d'être adaptée au transfert d'une machine à une autre. Mais le simple fait de changer le script Python de place suffit à l'empêcher de fonctionner. \\
+	
+		Par exemple, nous allons créer un dossier \verb|python| sur le Bureau. Dans ce dossier, nous allons placer un script Python d'un nom quelconque ainsi qu'un dossier \verb|fichiers| qui contiendra les fichiers dont le script aura besoin. Pour l'exemple, on prendra deux fichiers~: \verb|fichier_1.txt| et \verb|fichier_2.txt|
+	
+		Si, depuis le script Python, on veut accéder à \verb|fichier_1.txt|, il suffira de prendre le chemin relatif~:
+		\begin{verbatim}
+			fichiers/fichier_1.txt
+		\end{verbatim}
+	
+		(Un chemin relatif ne commence jamais par le symbole~: \verb|/|.) \\
+		Ainsi, lors de l'utilisation de chemins relatifs, il est commode de créer un dossier avec le script Python et l'ensemble des fichiers qui sont susceptibles d'être appelés. Ainsi, changer le dossier de place n'affectera pas le fonctionnement du script.
+
+	\subsection{Ouvrir un fichier}
+	
+	Pour ouvrir un fichier, nous allons faire appel à la fonction \python|open| qui va prendre deux arguments~:
+	\begin{description}
+		\item[le chemin] absolu ou relatif du fichier à ouvrir~;
+		\item[le mode d'ouverture] un paramètre qui régit les manipulations que l'on veut effectuer sur le fichier (nous verrons ces modes plus en détatil par la suite.).
+	\end{description}
+	
+	On a donc une syntaxe de ce type~: \python|mon_fichier = open("chemin/fichier_1.txt", "mode")|.
+	Cette fonction renvoie une variable qui correspond au fichier et sur laquelle on peut effectuer des opérations (généralement lire ou écrire). Ces opérations devront néanmoins respecter le mode d'ouverture précisé lors de l'appel à la fonction.
+	
+	Lorsque l'on a terminé de manipuler le fichier, il est important de le fermer via la syntaxe~: \python|mon_fichier.close()|
+
+\section{Lire un fichier}
+
+	Il faut preciser \python|"r"| (pour "read") en mode d'ouverture du fichier, la syntaxe devient~: \python|mon_fichier = open("chemin/fichier_1.txt", "r")|.
+	
+	On accède ensuite au contenu lui-même via la commande~: \python|contenu = mon_fichier.read()|. Il existe deux autres fonctions qui permettent de lire dans un fichier~:
+	\begin{itemize}
+		\item \python|mon_fichier.readline()| qui renvoie la ligne suivante du document. (Lors du premier appel, la fonction renvoie la première ligne, puis la deuxième et ainsi de suite. Lorsqu'il n'y a plus de ligne, la fonction renvoie la chaîne vide.)
+		\item \python|mon_fichier.readlines()| qui renvoie une liste qui contient toutes les lignes du document.
+	\end{itemize}
+	
+	Et on oublie pas de fermer le fichier après. La fermeture du fichier ne modifie pas la variable \python|contenu|. On peut donc tout à fait fermer le fichier juste après avoir sauvegardé le contenu.
+
+\section{Écrire dans un fichier}
+
+	Il faut distinguer deux types d'écriture~:
+	\begin{itemize}
+		\item On ajoute du contenu à la fin du fichier, le mode d'ouverture est alors \python|"a"|, pour "append".
+		\item On supprime le contenu existant et on écrit le contenu voulu dans le fichier, le mode d'ouverture est~: \python|"w"| pour "write".
+	\end{itemize}
+	
+	Dans les deux cas, il suffit ensuite d'utiliser la commande~: \python|mon_fichier.write("...")| pour écrire dans le fichier.
+	
+	Notez qu'écrire dans un fichier qui n'existe pas créé le fichier.
+
+\section{Récapitulatif}
+	
+	Pour manipuler des fichiers, on utilise la fonction \python|open|. Cette fonction prend en argument~:
+	\begin{enumerate}
+		\item le chemin (relatif ou absolu) du fichier à ouvrir~;
+		\item le mode d'ouverture.
+	\end{enumerate}
+	
+	\begin{tabular}{|c|c|} \hline
+		Mode d'ouverture & Utilisation \\ \hline \hline
+		\python|"r"| & lire le contenu d'un fichier \\ \hline
+		\python|"w"| & écraser le contenu d'un fichier avec un nouveau contenu \\ \hline
+		\python|"a"| & ajouter le nouveau contenu à la fin d'un fichier \\ \hline
+	\end{tabular}
+
+\section{Mise en pratique}
+	
+	\subsection{Organisation du dossier}
+
+		Pour l'exemple, nous reprendrons la configuration prise lors de l'introduction des chemins relatifs (voir~\ref{chemin_relatif}).
+		Nous allons donc prendre un dossier principal (son nom importe peu) qui va contenir~:
+		\begin{enumerate}
+			\item un script python (\python|test_fichier.py| dans la suite)~;
+			\item un dossier du nom de \verb|fichiers| qui ne contient rien pour l'instant.
+		\end{enumerate}
+		
+	\subsection{Écriture puis lecture d'un fichier}
+		
+		Le but ici est de créer un fichier contenant un texte à l'intérieur du dossier.
+		Nous allons donc utiliser la commande \python|open| avec ces arguments~:
+		\begin{enumerate}
+			\item le chemin~: \verb|fichiers/mon_fichier.txt|
+			\item le mode d'ouverture~: ici, une ouverture en écriture, donc \python|"a"| ou \python|"w"| (cela n'a pas d'importance, étant donné que le fichier n'existe pas, le contenu ne sera pas écrasé).
+		\end{enumerate}
+
+		Le code dans le fichier python va donc être~:
+		\begin{pythoncode}
+			mon_fichier = open("fichiers/mon_fichier.txt", "a")
+			mon_fichier.write("Ceci est une phrase.")
+			mon_fichier.close()
+		\end{pythoncode}
+
+		Vous pouvez ensuite ouvrir le fichier nouvellement créé avec un éditeur de texte normal pour vous assurer que l'écriture s'est bien passée. \\
+
+		On peut également lire le contenu du fichier (attention, pour lire, il faut que le fichier existe). Le code devient alors~:
+		\begin{pythoncode}
+			mon_fichier = open("fichiers/mon_fichier.txt", "r")
+			contenu = mon_fichier.read()
+			mon_fichier.close()
+
+			print(contenu)
+		\end{pythoncode}
+		
+		Ce qui suit n'est pas follement intéressant c'est juste pour montrer l'utilisation de \python|readlines|.
+		\begin{pythoncode}
+			mon_fichier = open("fichiers/mon_fichier.txt", "a")
+			mon_fichier.write("Ceci est une phrase\nEt encore une parce que sinon c'est...\npas intéressant.")
+			mon_fichier.close()
+			
+			mon_fichier = open("fichiers/mon_fichier.txt", "r")
+			print(mon_fichier.readlines())
+		\end{pythoncode}
+
+		On pourrait ensuite analyser le contenu du fichier en utilisant les manipulation vues sur les chaînes de caractères (voir~\ref{str}), la variable \python|contenu| est en effet de type \python|str|.

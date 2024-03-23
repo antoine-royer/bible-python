@@ -1,0 +1,213 @@
+\section{Fonctions}
+	
+	\subsection{Principe d'une fonction}
+		
+		Une fonction est un ensemble d'instructions qui prend des paramètres (ou arguments) en entrée et qui renvoie quelque chose (possiblement rien, mais ne rien renvoyer, c'est renvoyer quelque chose~: rien). Une fonction est définie par \python|def nom_de_ma_fonction():|. Tout le code qui est dans la fonction doit être indenté.
+		A la fin de la fonction, on peut renvoyer une variable grâce à \python|return|:
+		
+		\begin{pythoncode}
+			def ma_fonction():
+				<actions dans la fonction>
+				return variable_a_renvoyer
+			<actions en dehors>
+		\end{pythoncode}
+		
+		\subsubsection{Les arguments}
+		Les arguments sont des variables que l'on donne à la fonction en entrée.
+		
+		Les arguments sont précisés entre les parenthèses, chaque argument est séparé par une virgule~: \python|def ma_fonction(arg_1, arg_2, ...):|.
+		Il faut avoir à l'esprit que les arguments de la fonction sont internes à la fonction, on parle de variables locales (ou liées)
+		(par opposition aux variables globales qui sont définies en dehors de toute fonction). Par exemple~:
+		
+		\begin{pythoncode}
+			# retourne le carré de 'nombre'
+			def carre(nombre):
+				return nombre ** 2
+			
+			print(carre(2))
+			print(nombre)
+		\end{pythoncode}
+		
+		Ainsi la ligne 5 affiche 4 et la ligne 6 renvoie une erreur qui stipule que la variable \python|nombre| n'est pas définie. \\
+		
+		De même, lorsque l'on passe une variable en argument à une fonction, la fonction ne modifie pas la variable, elle ne travaille que sur une copie qui disparait à la fin de la fonction~:
+		\begin{pythoncode}
+			a = 2
+			def fonction(b):
+				return b + 2
+			
+			print(fonction(a)) # affiche 4
+			print(a) # a vaut toujours 2
+		\end{pythoncode}
+		
+		Pour modifier la variable donnée en argument, il faut affecter à la variable l'appel de la fonction~:
+		
+		\begin{pythoncode}
+			a = 2
+			def fonction(b):
+				return b + 2
+			
+			a = fonction(a)
+			print(a) # affiche 4
+		\end{pythoncode}
+		
+		\subsubsection{Cas particulier~: les listes}
+		La seule exception à ce qui précède est les listes (voir~\ref{list}). Si l'on donne en argument à une fonction une liste et que cette fonction modifie la liste, alors la liste est modifée même en-dehors de la fonction. On dit alors que la liste est modifée par effet de bord.
+		
+		\begin{pythoncode}
+			liste = [1, 2, 3]
+			def fonction(une_liste):
+				une_liste[0] = une_liste[-1]
+			
+			print(fonction(liste))
+			print(liste)
+		\end{pythoncode}
+		
+		La ligne 5 affiche \python|None| (car la fonction ne renvoie rien). Et la ligne 6 affiche \python|[3, 2, 3]|, la liste a bien été modifiée.
+	
+		\subsubsection{Retourner un résultat}
+		Une fonction renvoie toujours quelque chose. Si on ne précise pas quoi renvoyer (avec \python|return|), alors la fonction renvoie "rien", ce qui en Python se dit \python|None|.
+	
+	\subsection{La récursivité, c'est la récurvité, mais en plus simple}
+		
+		\subsubsection{Définition de la récursivité}
+		Une fonction est dite récursive si elle intervient dans sa propre définition. Le concept est dur à prendre en main car il n'est pas naturel de réfléchir en terme de récurvité. Par opposition, les fonction non récursives sont dites "itératives". Autrement dit, une fonction récursive va être de la forme~:
+		
+		\begin{pythoncode}
+			def ma_fonction(<arguments>):
+				<actions>
+				ma_fonction(...)
+				<action>
+				return <variable>
+		\end{pythoncode}
+		
+		\subsubsection{Mise en place d'un algorithme récursif}
+		La mise en place d'algorithme récursif va souvent s'axer sur deux grands principes~:
+		\begin{itemize}
+			\item Soit une certaine condition est vraie et on renvoie à l'utilisateur le résultat. (on parle de cas terminal).
+			\item Soit cette condition est fausse et l'on appelle la fonction récursive avec des arguments différents.
+		\end{itemize}
+		
+		Cette mise en place est particulièrement simple sur des exemples mathématiques où l'on veut programmer une formule donnée par récurrence. Le principe est le même ici. 
+		
+		\subsubsection{Mise en pratique}
+		À titre d'exemple reprenons la construction de la fonction factorielle~:
+		\[	n! = \left \{ \begin{array}{ll}
+			1 & \quad \textrm{si $n = 0$} \\
+			n \cdot (n - 1)! & \quad \textrm{sinon}
+		\end{array} \right . \]
+		
+		Ainsi, la fonction va naturellement s'articuler autour de la formule mathématique~:
+		\begin{pythoncode}
+			def factorielle(n):
+				if n == 0:
+					return 1
+				else:
+					return n * factorielle(n - 1)
+		\end{pythoncode}
+		
+\section{Modules et importations}
+	
+	\subsection{Principe des modules}
+		
+		Python connaît quelques fonctions indispensables, comme l'addition de deux nombres ou l'affichage d'un texte. Mais bien souvent,
+		on a besoin de fonctions particulières, notamment des fonctions mathématiques, $\cos$, $\sin$, racine carrée, etc.
+		Ces fonctions-là ne sont pas fournies dans Python directement, mais dans un "module" à part.
+		
+		Un module est donc une sorte de grand script avec beaucoup de fonctions dedans. Nous verrons ici comment importer un module, et quelques modules usuels.
+	
+	\subsection{Importer un module}
+		
+		Il y a trois manière d'importer un module~:
+		\begin{itemize}
+			\item \python|import module|~: la manière la plus élégante et propre\footnote{On peut également déclarer un alias~: \python|import module as m|, la syntaxe pour les fonction devient alors \python|m.fonction()| au lieu de \python|module.fonction()|}
+			\item \python|from module import fn_1, fn_2, ...|~: importe les fonction \python|fn_1| et \python|fn_2| du module.
+			\item \python|from module import *|~: importe toutes les fonctions du module. On connaît toutefois rarement toutes les fonctions d'un module, et il existe dès lors un risque qu'une fonction définie par nous entre en conflit avec une fonction du module. Cette syntaxe est donc à éviter et sera bannie de la suite de notre développement.
+		\end{itemize}
+		
+		Revenons sur les deux premières méthode avec un exemple~: (le module \python|math| ajoute des fonctions mathématiques)
+		\begin{pythoncode}
+			>>> import math
+			>>> math.cos(0)
+			1.0
+		\end{pythoncode}
+		
+		On aurait pu aussi écrire~:
+		\begin{pythoncode}
+			>>> from math import cos
+			>>> cos(0)
+			1.0
+		\end{pythoncode}
+
+		Ainsi, si la première syntaxe permet d'importer toutes les fonctions du module, la deuxième a l'avantage de dispenser le programmeur d'utiliser le préfixe \python|math.| chaque fois qu'il souhaite appeler la fonction.
+	
+	\subsection{Quelques modules usuels}
+	
+		Nous allons voir ici trois modules de manière succinte~:
+		\begin{description}
+			\item[Le module \python|math|] qui contient un grand nombre de fonctions mathématiques
+			\item[Le module \python|random|] qui permet de générer des nombres aléatoires
+			\item[Le module \python|numpy|] qui permet de manipuler des tableaux, ce module sera vu plus tard (voir~\ref{numpy})
+		\end{description}
+		
+		\subsubsection{Fonctions mathématiques}
+		Il faut importer le module \python|math|~: \python|import math|
+		Donnons ici les principales fonctions~:
+		\begin{description}
+			\item[\python|math.pi|] une approximation de $\pi$
+			\item[\python|math.cos(x)|] fonction cosinus
+			\item[\python|math.sin(x)|] fonction sinus
+			\item[\python|math.tan(x)|] fonction tangente
+			\item[\python|math.log(x)|] fonction logarithme népérien
+			\item[\python|math.sqrt(x)|] racine carrée
+		\end{description}
+		
+		\subsubsection{Aléatoire}
+		Le module correspondant s'appelle \python|random|~: \python|import random|
+		\begin{description}
+			\item[\python|random.random()|] renvoie un nombre aléatoire dans $[0~;\ 1[$
+			\item[\python|random.randint(min, max)|] renvoie un nombre entier entre $[min~;\ max]$
+			\item[\python|random.choice(liste)|] renvoie un élément au hasard de la liste (marche aussi avec une chaîne de caractère).
+		\end{description}
+
+\section{Applications}
+
+		Les fonctions, sont, avec les bases vues au chapitre 1 (voir page~\pageref{chap_1}), le cœur du langage. On peut donc d'ores et déjà faire quelques fonctions~:
+		
+	\subsection{Théorème de pythagore} \label{appl:pythagore} (Corrigé~: \ref{corr:pythagore})
+		
+		Le but est de faire une petite fonction qui prend comme argument trois entiers (les trois côtés du triangles) qui renvoie un booléen qui vaut \python|True| si le triangle est rectangle, \python|False| sinon.
+		On suppose que le côté le plus long est toujours donné en dernier.
+		
+	\subsection{Implémentation de la fonction factorielle} \label{appl:factorielle} (Corrigé~: \ref{corr:factorielle})
+		
+		La fonction factorielle est définie par~:
+		\[
+			n! = \prod_{i = 1}^n i \quad \textrm{et} \quad 0! = 1
+		\]
+		Le but est d'écire une fonction factorielle qui prend en argument $n$ et renvoie $n!$.
+	
+	\subsection{Test de la primalité d'un nombre} \label{appl:premier} (Corrigé~: \ref{corr:premier})
+
+		Un nombre $p \in \mathbb{N}^*$ est premier s'il n'est divisible par aucun entier $n \in \llbracket 2~;\ \sqrt{p} \rrbracket$
+		
+		Le programme va donc s'axer sur~:
+		\begin{enumerate}
+			\item Pour tout les $n \in \llbracket 2~;\ \sqrt{p} \rrbracket$
+			\item Si $p$ est divisible par $n$
+			\item Alors on quitte la fonction~: le nombre n'est pas premier
+			\item Si on a testé tous les nombres, alors $p$ n'est divisible par aucun entier dans $\llbracket 2~;\ \sqrt{p} \rrbracket$, donc $p$ est premier
+		\end{enumerate}
+	
+	\subsection{Version récursive de l'algorithme d'Euclide} \label{appl:euclide_rec} (Corrigé~: \ref{corr:euclide_rec})
+	
+		L'algorithme d'Euclide (une version itérative est proposé au~: \ref{pgcd}) permet de calculer le plus grand dénominateur commun entre deux nombres. Le but est d'en écrire une version récursive. Le programme devra calculer $PGCD(a~;\ b)$. Quelques jalons pour guider l'exercice~:
+		\begin{enumerate}
+			\item tant que $b$ est non nul
+			\item $a$ prend b pour valeur et $b$ prend $a\ MOD\ b$ pour valeur (c'est simultané, avec une notation indicielle où l'indice est le numéro du tour de boucle nous aurions~: $a_{i+1} = a_i$ et $b_{i+1} = a_i\ MOD\ b_i$)
+		\end{enumerate}
+
+		
+			
+		
+		

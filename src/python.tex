@@ -1,0 +1,47 @@
+\documentclass[french, a4paper, 12pt, openany]{book}
+\usepackage{titling}
+
+\title{\sc Petite bible du langage Python}
+\author{Loris \textsc{Delafosse} et Antoine \textsc{Royer}}
+\date{2021 -- 2022}
+
+\input{~/latex/book.tex}
+
+\usepackage[outputdir=/home/sha-chan/.cache/gummi]{minted}
+%\usepackage{minted}
+\input{~/latex/minted.tex}
+
+\lhead{}
+\rhead{{\thetitle}}
+
+\lfoot{{\theauthor}}
+\cfoot{\thepage\ $|$ \pageref{LastPage}}
+\rfoot{MPSI - MP, Lycée Malherbe\\2021 -- 2022}
+
+\begin{document} \maketitle \tableofcontents
+
+	\chapter{Variables, test et boucles} \label{chap_1}
+		\input{chapitres/chapitre_1.tex}
+	
+	\chapter{Fonctions et modules}
+		\input{chapitres/chapitre_2.tex}
+	
+	\chapter{Chaînes de caractères, listes et dictionnaires}
+		\input{chapitres/chapitre_3.tex}
+	
+	\chapter{Introduction aux outils pour l'analyse numérique} \label{chap_4}
+		\input{chapitres/chapitre_4.tex}
+	
+	\chapter{Gestion des fichiers}
+		\input{chapitres/chapitre_5.tex}
+	
+	\chapter{Algorithmes usuels et notions théoriques}
+		\input{chapitres/chapitre_6.tex}
+	
+	\chapter{Programmation orientée objet}
+		\input{chapitres/chapitre_7.tex}
+	
+	\chapter{Corrigés des applications}
+		\input{chapitres/corriges.tex}
+
+\end{document}

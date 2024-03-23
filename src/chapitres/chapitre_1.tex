@@ -1,0 +1,413 @@
+\section{Variables}
+
+	\subsection{Notion de variable}
+		
+		Une variable est un morceau de mémoire auquel le programmeur attribue un nom et une valeur susceptible d'être modifiée lors de l'exécution du programme.
+		
+		Chaque variable est associée à un type, qui correspond au type de valeur que la variable peut contenir~: \\
+		
+		\begin{tabular}{|c|c|} \hline
+			nom du type Python & description en français \\ \hline \hline
+			\python|int| & un nombre entier \\ \hline
+			\python|float| & un nombre réel \\ \hline
+			\python|str| & une chaîne de caractères \\ \hline
+			\python|list| & une liste de variables \\ \hline
+			\python|bool| & un booléen \\ \hline
+		\end{tabular}
+
+		Le type va notamment conditionner les différentes opérations autorisées sur la variable.
+		On ne peut pas, par exemple, comparer un entier et une chaîne de caractères. De même certains opérateurs (\python|+|, \python|-|, \python|*|$\ldots$) n'ont pas le même sens suivant le type de variable sur lequel il s'applique. \\
+		
+	\subsection{Initialiser une variable}
+		
+		Initialiser une variable, c'est lui attribuer son nom et sa valeur initiale~: \python|nom = valeur| avec~:
+		\begin{description}
+			\item[nom] le nom de la variable (peut contenir des lettres majuscules, minuscules et des chiffres.
+			Attention à ne pas placer de chiffre en première place\footnote{\python|NomDeVariable123| est valide. \python|123variable| n'est pas valide car le nom commence par un chiffre. À noter qu'on peut également utiliser le symbole \python|_| dans les noms de variables.}.)
+			Il est recommendé de nommer les variables d'une manière qui renvoie explicitement à leur contenu dans le programme. (Les noms comme \python|compteur| ou \python|liste1| sont ainsi à préférer à \python|k| ou \python|a|.)
+			\item[valeur] Python détecte automatiquement le type de la variable comme étant le type de la valeur associée.
+		\end{description}
+		
+		Lorsque l'on a plusieurs variables à initialiser simultanément, on peut passer par différentes syntaxes~:
+		\begin{itemize}
+			\item si toutes les variables ont la même valeur initiale~: \python|var_1 = var_2 = ... = valeur|
+			\item si les variables ont des valeurs différentes~: \newline \python|var_1, var_2, ... = valeur_1, valeur_2, ...|
+		\end{itemize}
+		
+		\subsubsection{Exemples d'initialisation sur des types usuels}
+		Nous nous intéressons ici à l'initialisation de la variable \python|ma_variable| (notez l'originalité dans le choix du nom~!)
+		\paragraph{Les entiers (ou réels)} \python|ma_variable = 2| ou \python|ma_variable = 2.5| pour un \python|float|
+		\paragraph{Les chaînes de caractères} \python|ma_variable = "Coucou"| L'important est de placer le texte entre guillemets.
+		\paragraph{Les listes} \python|ma_variable = [1, 2, 3]| Les éléments sont à placer entre crochets. Les éléments d'une liste peuvent être de type différents~: \python|ma_variable = [1, 2, False, "Coucou", [3, 4]]| est valide.
+
+	\subsection{Calculs élémentaires sur les variables}
+	
+		Python gère beaucoup de types de variables, et il est possible d'en créer. Les chaînes de caractères font l'objet d'une section à part (voir~\ref{str}), de même que les listes (voir~\ref{list}). \\
+	
+		\begin{tabular}{|c|c|c|c|} \hline
+					  & \python|int| & \python|str| & \python|list| \\ \hline \hline
+			\python|+|  & addition & concaténation & concaténation \\ \hline
+			\python|-|  & soustraction & \emph{non défini} & \emph{non défini} \\ \hline
+			\python|*|  & multiplication & répétition & répétition \\ \hline
+			\python|**| & puissance & \emph{non défini} & \emph{non défini} \\ \hline
+			\python|/|  & division & \emph{non défini} & \emph{non défini} \\ \hline
+			\python|//| & quotient de la division euclidienne & \emph{non défini} & \emph{non défini} \\ \hline
+			\python|%|  & reste de la division euclidienne & \emph{non défini} & \emph{non défini} \\ \hline
+		\end{tabular} \\
+		
+		Lorsque l'on effectue un calcul, il est souvent intéressant de sauver le résultat dans une variable.
+		On utilise alors la même syntaxe que pour l'initialisation~:
+		
+		\begin{pythoncode}
+			>>> a = 2
+			>>> b = 5
+			>>> c = a + b
+			>>> c
+			7
+		\end{pythoncode}
+		
+		Il existe également des syntaxes abrégées~: \\
+		
+		\begin{tabular}{|c|c|} \hline
+			syntaxe complète & syntaxe abrégée \\ \hline \hline
+			\python|var = var + a| & \python|var += a| \\ \hline
+			\python|var = var - a| & \python|var -= a| \\ \hline
+			\python|var = var * a| & \python|var *= a| \\ \hline
+			\python|var = var / a| & \python|var /= a| \\ \hline
+			\python|var = var // a| & \python|var //= a| \\ \hline
+			\python|var = var % a| & \python|var %= a| \\ \hline	
+		\end{tabular} \\
+	
+		Quelques exemples~:
+		
+		\begin{pythoncode}
+			>>> a = 5
+			>>> a += 1
+			>>> a
+			6
+			>>> a *= 2
+			>>> a
+			12
+			>>> a /= 4
+			>>> a
+			3.0
+			>>> a **= 2
+			>>> a
+			9.0
+		\end{pythoncode}
+	
+	\subsection{Transtypage}
+		
+		\subsubsection{Principe}
+		En Python, il est possible d'effectuer du transtypage, i.e. de modifier le type d'une variable. Il suffit pour cela d'appeler la fonction qui porte le nom du type que l'on souhaite (voir les exemples ci-dessous) et de lui donner la variable à transtyper en argument.
+		
+		\subsubsection{Exemples}
+		\paragraph{Obtenir un entier} \python|variable = int(variable)| (initialement, \python|variable| doit être de type \python|float| ou \python|str|.)
+		\paragraph{Obtenir une liste} \python|variable = list(variable)| (initialement, \python|variable| doit être de type \python|int| ou \python|str|.)
+		\paragraph{Obtenir une chaîne de caractères} \python|variable = str(variable)| (initialement, \python|variable| doit être de type \python|int| ou \python|list|.)
+		
+	
+\section{Interactions~: gestion des entrées sorties}
+	
+	\subsection{Afficher du texte}
+		
+		On utilise la fonction \python|print| pour afficher du texte. On peut afficher~:
+		\begin{itemize}
+			\item du texte~: \python|print("du texte à afficher")|
+			\item une variable~: \python|print(ma_variable)|
+			\item les deux en même temps~: \python|print("la variable vaut :", ma_variable, "du texte.")| (il faut séparer le texte des variables par des virgules).
+		\end{itemize}
+	
+	\subsection{Récupérer une valeur}
+		
+		Il est parfois intéressant de récupérer une valeur auprès de l'utilisateur. On utilise alors la fonction \python|input|.
+		Cette fonction peut prendre en argument une chaîne de caractères et renvoie une chaîne de caractères.
+		
+		Tout cela sera développé ultérieurement.
+
+\section{Test conditionnel}
+	
+	\subsection{Principe}
+	
+		Il s'agit d'une simple implication logique. Si une condition est vérifiée, alors on effectue telles actions.
+		La syntaxe est~:
+		\begin{pythoncode}
+			if <condition>:
+				<actions>
+			<autre action sans rapport avec le if>
+		\end{pythoncode}
+		
+		Juste après la condition, il faut impérativement mettre un \python|:|. De manière plus générale, en Python, les doubles-points \python|:| indiquent le début d'un nouveau bloc (test conditionnel, boucle itérative, conditionnelle, fonction$\ldots$)
+		
+		Il faut bien avoir en tête que le niveau d'indentation détermine la portée du test (c'est valable pour les tests conditionnels, les boucles, les fonctions$\ldots$)
+		Autrement dit, tout ce qui suit le \python|if| avec un niveau d'indentation supplémentaire, correspond à ce qu'il faut faire si la condition est réalisée.
+		
+		Si la condition du \python|if| n'est pas vérifiée, on peut effectuer d'autres actions grâce au mot-clef \python|else|~:
+		\begin{pythoncode}
+			if <condition>:
+				<actions>
+			else:
+				<actions>
+		\end{pythoncode}
+		
+		On peut aller encore plus loin~: si la condition 1 est vérifiée, on effectue telles actions, sinon, si la condition 2 est vérifiée alors on effectue telles actions$\ldots$ Et si aucune condition n'est vérifiée alors on effectue encore d'autres actions. La syntaxe pourrait être~:
+		\begin{pythoncode}
+			if <condition 1>:
+				<actions>
+			else:
+				if <condition 2>:
+					<actions>
+				else:
+					if ...
+		\end{pythoncode}
+		
+		Ce qui est très lourd. On utilisera plutôt le mot-clef \python|elif| qui remplace le \python|else| et le \python|if| qui se suivent. La syntaxe devient alors~:
+		\begin{pythoncode}
+			if <condition 1>:
+				<actions 1>
+			elif <condition 2>:
+				<actions 2>
+			else:
+				<actions 3>
+		\end{pythoncode}
+		
+		Pour expliquer un peu plus~: si la <condition 1> est vraie, on effectue <actions 1>, si la <condition 1> est fausse et que la <condition 2> est vraie, on effectue <actions 2>. Et si les deux conditions sont fausses, on effectue <actions 3>.
+			
+	\subsection{Retours sur les booléens et les conditions} \label{logique}
+		
+		Le type booléen en Python est un type qui ne peut prendre que deux valeurs~: \python|True| ou \python|False|. Une expression logique est vraie si elle est égale au booléen \python|True|.
+		
+		Une expression logique est une phrase constituée de variables, d'opérateurs de comparaisons (ils sont à connaître), et potentiellement d'opérateurs logique (on les croise plus rarement, mais ça peut être utile de voir leurs rôles).
+		Si la phrase est vraie (donc égale à \python|True|), la condition est vérifiée, donc le code précisé dans le bloc suivant le \python|if| est exécuté.
+		
+		\begin{multicols}{2}
+			\begin{tabular}{|c|c|} \hline
+				\multicolumn{2}{|c|}{Opérateurs de comparaisons} \\ \hline \hline
+				\python|==| & est égal à \\ \hline
+				\python|!=| & est différent de \\ \hline
+				\python|>| & est strictement supérieur à \\ \hline
+				\python|>=| & est supérieur ou égal à \\ \hline
+				\python|<| & est strictement inférieur à \\ \hline
+				\python|<=| & est inférieur ou égal à \\ \hline 	
+			\end{tabular}
+			
+			\columnbreak
+			
+			\begin{tabular}{|c|c|} \hline
+				\multicolumn{2}{|c|}{Opérateurs logiques} \\ \hline \hline
+				\python|and| & et logique \\ \hline
+				\python|or| & ou logique (inclusif) \\ \hline
+				\python|not| & complémentation \\ \hline
+			\end{tabular}
+		\end{multicols}
+		
+		Attention à ne pas confondre l'opérateur d'affectation \python|=|, qui permet d'initialiser une variable, avec la comparaison "est égal à", \python|==|.
+	
+	\subsection{Exemples}
+	
+		\subsubsection{Expressions logiques}
+		Il s'agit ici plus de logique que de programmation Python~:
+		\begin{pythoncode}
+			>>> a = 2
+			>>> b = 5
+			>>> a == b
+			False
+			>>> a < b
+			True
+			>>> (a < b) or (a == b)
+			True
+			>>> not ((a % 2) == (5 % 2))
+			True
+		\end{pythoncode}
+		Juste pour revenir sur la dernière expression logique, \python|%| est le reste de la division euclidienne par deux. Ainsi, la phrase~:
+		\python|(a % 2) == (b % 2)| est fausse, la complémentation la rend vraie.
+	
+		\subsubsection{Exemples}
+		\begin{pythoncode}
+			>>> a = 2
+			>>> b = 5
+			>>> if a == b:
+			...     a = a + 1
+			...
+			>>> a
+			2
+			>>> if a <= b:
+			...     a += 1 # une autre syntaxe pour a = a + 1
+			...
+			>>> a
+			3
+		\end{pythoncode}
+		
+		On peut tout à fait faire un petit script~:
+		
+		\begin{pythoncode}
+			# On demande l'âge et on stocke la chaîne de caractères
+			# renvoyée dans 'age'
+			age = input("Quel est votre âge ? ")
+			
+			# On convertit la chaîne de caractères en un entier
+			age = int(age)
+			
+			# Si la variable age est supérieure ou égale à 18
+			if age >= 18:
+				print("Vieux machin !")
+			
+			# Sinon (si la variable 'age' est strictement inférieure à 18)
+			else:
+				print("Alcool interdit...")
+		\end{pythoncode}
+		
+		Un autre exemple avec un \python|elif|~:
+		
+		\begin{pythoncode}
+			nombre = int(input("Entrez un nombre : "))
+			
+			if nombre == 5:
+				print("Vous avez gagné !")
+			
+			# Si la variable 'nombre' est différente de 5 et égale à 10
+			elif nombre == 10:
+				print("Presque...")
+				
+			# Si la variable 'nombre' est différente de 5 et différente de 10
+			else:
+				print("Mmm... perdu...")
+		\end{pythoncode}
+		
+\section{Boucle itérative} \label{for}
+	
+	\subsection{Principe}
+		
+		On cherche à présent à répéter les mêmes opérations un nombre déterminé de fois.
+		On utilise généralement la syntaxe~:
+		\begin{pythoncode}
+			for i in range(n):
+				<actions>
+			<action sans rapport avec la boucle>
+		\end{pythoncode}
+		On appelle \python|i| variable itératrice. On peut lui donner n'importe quel nom, et même, dans le cas où on ne compte pas se servir de la variable dans la boucle, on peut noter~: \python|for _ in range(...):|. Il s'agit d'une variable liée, ce qui signifie qu'elle n'a pas besoin d'être initialisée auparavant et qu'elle n'a pas de sens en-dehors de la boucle.
+		
+		En Python, il y a plusieurs manières d'utiliser \python|range|~:
+		\begin{itemize}
+			\item en précisant uniquement la borne haute~: \python|range(n)| (la variable itératrice va aller de 0 à n - 1)
+			\item en précisant la borne basse et la borne haute~: \python|range(bas, haut)| (va aller de \python|bas| à \python|haut - 1|)
+			\item en précisant les bornes basses et hautes ainsi que le pas (la valeur dont la variable itératrice est incrémentée à chaque tour)~: \python|range(bas, haut, pas)|
+		\end{itemize}
+		
+		Comme pour le test conditionnel, les actions à effectuer sont placées dans un bloc indenté. Ce dernier commence par \python|:|, et se termine avec la fin du niveau d'indentation. \\
+		
+		On peut également utiliser les boucles itératives autrement. L'idée est que la variable itérative prenne pour valeur les éléments d'une liste ou les lettres d'une chaîne de caractères. En notant \python|ma_variable| une liste ou une chaîne de caractères, la syntaxe devient~:
+		\begin{pythoncode}
+			for i in ma_variable:
+				<actions>
+		\end{pythoncode} 
+		
+	\subsection{Exemples simples}
+	
+		\subsubsection{Prise en main de \python|range|}
+		\begin{pythoncode}
+			>>> for i in range(3):
+			...     print(i)
+			...
+			0
+			1
+			2
+			>>> for i in range(1, 3):
+			...     print(i)
+			...
+			1
+			2
+			>>> for i in range(0, 10, 2):
+			...     print(i)
+			0
+			2
+			4
+			6
+			8
+		\end{pythoncode}
+		
+		\subsubsection{Boucler sur une liste}
+		\begin{pythoncode}
+			>>> ma_liste = [1, 2, "Coucou", [3, 4]]
+			>>> for element in ma_liste:
+			...     print(element)
+			...
+			1
+			2
+			Coucou
+			[3, 4]
+		\end{pythoncode}
+		
+		\subsubsection{Boucler sur une chaîne de caractères}
+		\begin{pythoncode}
+			>>> ma_chaine = "Bonjour"
+			>>> for lettre in ma_chaine:
+			... 	print(lettre)
+			...
+			B
+			o
+			n
+			j
+			o
+			u
+			r
+		\end{pythoncode}
+	
+	\subsection{Exemples plus avancés}
+		
+		Pour avoir les points d'une fonction $y = x^2$, on peut utiliser une boucle itérative qui, pour chaque valeur de $x$ associe la valeur de $y$~:
+		\begin{pythoncode}
+			>>> x = [0, 1, 2, 3, 4, 5] # les abscisses des points
+			>>> y = [] # les ordonnées
+			>>> for abscisse in x: # pour chaque x
+			... 	y.append(x ** 2) # on ajoute à la liste y, x^2
+			...
+			>>> y
+			[0, 1, 4, 9, 16, 25]
+		\end{pythoncode}
+		
+		On peut également avoir à chercher un élément dans une liste. Ci-dessous, on cherche l'élément 1 dans la liste \python|[1, 2, 3, 4, 5]|~:
+		\begin{pythoncode}
+			>>> ma_liste = [1, 2, 3, 4, 5]
+			>>> for element in ma_liste:
+			... 	if element == 1:
+			... 		print("Trouvé")
+			...
+			Trouvé
+		\end{pythoncode}
+
+\section{Boucle conditionnelle}
+	
+	\subsection{Principe}
+	
+		La boucle conditionnelle intervient à la frontière entre le test conditionnel et la boucle itérative.
+		On cherche à répéter un certain nombre d'actions tant qu'une condition donnée est vraie. Nous ne reviendrons pas ici sur les conditions et les booléens (voir~\ref{logique}).
+		
+		La syntaxe est la suivante~:
+		\begin{pythoncode}
+			while <condition>:
+				<actions>
+			<actions sans rapport avec la boucle>
+		\end{pythoncode}
+		On note ici aussi l'importance du \python|:| qui signifie l'entrée dans le bloc et la fin du niveau d'indentation qui en signal la fin.
+	
+	\subsection{Exemples}
+	
+		Il s'agit ici d'un petit script qui affiche le plus grand nombre entier tel que son carré soit inférieur ou égal à 25.
+		\begin{pythoncode}
+			i = 20
+			# tant que i ** 2 est plus grand que 25 ...
+			while i ** 2 > 25:
+				i -= 1 # ... i prend la valeur i - 1
+			print(i)
+		\end{pythoncode}
+		
+		Attention~: si la condition est toujours vérifiée, alors le programme ne s'arrêtera jamais ! Au contraire, si la condition n'est pas vérifiée, les actions dans la boucle ne seront jamais traitées.
+		
+		Par exemple, ce petit script affiche \python|4| en sortie.
+		\begin{pythoncode}
+			i = 4
+			while i ** 2 > 25:
+				i -= 1
+			print(i)
+		\end{pythoncode}

@@ -1,0 +1,338 @@
+\section{Introduction à la programmation orientée objet (POO)}
+
+	\subsection{Définition d'un objet et principe de la POO}
+	
+		En Python, toutes les variables sont typées (i.e. ont un type). Ainsi lorsque l'on écrit~: \python|variable = 4|, on crée en fait un objet \python|variable|, de type \python|int| et qui contient \python|4| (la valeur elle-même a aussi le statut d'objet).
+		
+		On dit que \python|variable| est une instance du type \python|int|. Ce qui explique pourquoi \python|4| a également le statut d'objet~: il s'agit bien d'une instance aussi.
+		
+		De manière un peu plus formelle, une instance est un représentant d'un type donné. Le type est une notion abstraite (un entier, une liste etc) alors que l'instance est un objet particulier rattaché à cette notion (\python|4| est un entier en particulier, et non un entier en tant que notion).
+			
+		La programmation orientée objet va avoir pour objectif de créer de nouveaux types de variables. On pourra ensuite écrire \python|ma_variable = MonType()| où \python|ma_variable| sera une instance (un objet) du type \python|MonType|.
+	
+	\subsection{Classes, méthodes et attributs}
+		
+		\subsubsection{Première approche pratique}
+		Reprenons un exemple~: \python|ma_liste = [1, 2, 3]|. Ici, \python|ma_liste| est une instance du type \python|list|. On dit qu'on accède à une méthode ou à un attribut d'une instance lorsqu'on utilise la syntaxe avec le point~: \python|mon_instance.methode()|, ou \python|mon_instance.attribut|.
+		
+		Sur les listes par exemple, lorsque l'on écrit~: \python|ma_liste.append(2)|, on appelle en fait la méthode \python|append| associée au type \python|list| (toutes les listes ont cette méthode), avec l'argument \python|3|. Les méthodes sont de ce fait des fonctions associées à un type précis.
+		
+		Les attributs correspondent à des variables propre à un type. Il y a assez peu d'exemple en Python, on pourra toutefois citer les tableaux \python|numpy| qui ont un attribut \python|shape| qui correspond à la taille du tableau.
+		
+		\subsection{Formalisation}
+		En résumé~:
+		\begin{description}
+			\item[Une méthode] est une fonction associée à un type précis.
+			\item[Un attribut] est une variable associée à un type précis.
+		\end{description}
+		Et on appelle une méthode (ou on demande la valeur d'un attribut) grâce au point que l'on place entre l'instance et la méthode (ou l'attribut).
+		
+		Donc pour l'instant, on a vu qu'un type est en fait constitué de fonctions (méthodes) et de variables (attributs). Pour programmer un nouveau type, il faut indiquer explicitement à Python quelle fonction (ou variable) est une méthode (ou attribut) du nouveau type. Pour cela on utilise une classe. La syntaxe est assez simple~:
+		\begin{pythoncode}
+			class MonType:
+				attribut = <valeur>
+				def methode(<argument>):
+					<actions>
+					return <variable>
+		\end{pythoncode}
+
+\section{Classes et types}
+	
+	\subsection{Créer un nouveau type}
+		
+		Créer un nouveau type de variable est équivalent à créer une classe. Il suffit dont d'écrire~: 
+		\begin{pythoncode}
+			class MonType:
+				pass
+		\end{pythoncode}
+		Le mot-clef \python|pass| permet de dire à Python qu'il n'y a rien à faire.\footnote{i.e. que la classe est vide, que la fonction n'effectue aucun calcul etc.} Dans la suite nous verrons comment remplir cette classe avec des méthodes et des attibuts.
+		
+		On peut ensuite écrire~: \python|ma_variable = MonType()| pour créer une instance du type \python|MonType|.
+	
+	\subsection{Implémentation de méthodes et d'attributs}
+	
+		Pour définir une nouvelle méthode, il suffit d'écrire une fonction dans la classe. Cette fonction peut prendre des arguments et renvoyer (ou afficher) un résultat, comme n'importe quelle fonction.
+		
+		La seule subtilité est que toutes les méthodes doivent prendre au moins un argument~: l'instance elle-même. Explications~: lorsque l'on écrit~: \python|ma_variable = MonType()|, on crée une instance qui porte le nom \python|ma_variable|. Les méthodes vont donc prendre cette instance en premier argument, qui est nommé \python|self| par convention.
+		
+		Si l'on reprend notre exemple~:
+		\begin{pythoncode}
+			class MonType:
+				def methode(self):
+					return 42
+		\end{pythoncode}
+		
+		On peut ensuite créer une instance pour voir le résultat (limité pour l'instant)~:
+		\begin{pythoncode}
+			>>> variable = MonType()
+			>>> variable.methode()
+			42
+		\end{pythoncode}
+		
+		Pour créer un attribut, ce n'est pas plus compliqué qu'une simple affectation.
+		\begin{pythoncode}
+			class MonType:
+				def methode(self):
+					self.attribut = 0
+					return 42
+		\end{pythoncode}
+		
+		Bien que ce code soit fonctionnel, nous rencontrons quelques paradoxes~: l'attribut est défini à l'intérieur d'une méthode, si bien que tant que cette méthode n'a pas été exécutée, l'attribut n'existe pas. Ainsi~:
+		\begin{pythoncode}
+			>>> variable = MonType()
+			>>> variable.attribut
+			AttributeError
+			>>> variable.methode()
+			42
+			>>> variable.attribut
+			0
+		\end{pythoncode}
+		
+		On voudrait pourtant pouvoir utiliser l'attribut comme une propriété de l'instance indépendamment des méthodes exécutées. La méthode spéciale \python|__init__| permet de pallier ces problèmes de définition.
+	
+	\subsection{Méthodes spéciales}
+		
+		Python permet de nombreuses manipulations avec les objets comme la re-définition des opérateurs pour le nouveau type (\python|+|, \python|-|, \python|*|, \python|/|, ...), mais aussi la possibilité de rendre l'objet "appelable", ou "itérable". Ces notions seronts vues en même temps que les méthodes spéciales correspondantes.
+		
+		Avant de voir ces méthodes spéciales, un petit point de syntaxe, dans une classe, les méthodes spéciales sont toujours de la forme \python|__methode__(self, <argument>):|.
+		
+		\subsubsection{Initialiser un objet}
+		La méthode spéciale \python|__init__| se lance automatiquement à la création de l'instance. Ainsi, lorsque l'on écrit~: \python|variable = MonType()|, la méthode \python|__init__| se lance. 
+		
+		Il faut voir la création de l'instance comme un appel à \python|__init__|, le premier argument est l'instance elle-même (\python|self| par convention), les arguments suivants sont des arguments normaux. Par exemple, si l'on définit la classe par~:
+		\begin{pythoncode}
+			class MonType:
+				def __init__(self, attribut):
+					self.attribut = attribut
+		\end{pythoncode}
+		On peut ensuite s'en servir de la manière suivante~:
+		\begin{pythoncode}
+			>>> variable = MonType(1)
+			>>> variable.attribut
+			1
+		\end{pythoncode}
+		
+		Contrairement à l'attribut défini dans l'exemple du paragraphe précédent, cet attribut pourra être utilisé dans toutes les méthodes de la classe sans problème.
+		
+		\subsubsection{Redéfinition des opérateurs}
+		Nous ne verrons ici que comment redéfinir les opérateurs élémentaires, à savoir l'addition, la soustraction, la multiplication et la division.
+		
+		Un peu de théorie avant la suite, lorsque l'on écrit un calcul, Python lance en fait une méthode qui correspond au calcul à effectuer. Ainsi \python|2+3| exécute une méthode sur les \python|int|, \python|"bon" + "jour"| lance la même méthode, mais sur les \python|str|. \\
+		
+		Un peu plus de subtilité, pour chaque opérateur, il existe deux méthodes qui correspondent aux deux syntaxes~:
+		\begin{itemize}
+			\item \python|variable <operateur> <argument>| qui est la syntaxe normale, avec l'instance à gauche.
+			\item \python|<argument> <operateur> variable| qui est la syntaxe inverse avec l'instance à droite.
+		\end{itemize}
+		
+		La liste des principaux opérateurs~:
+		\begin{itemize}
+			\item L'addition correspond à la méthode spéciale~: \python|__add__(self, argument):|. Cette méthode est appelée avec la syntaxe~: \python|variable + <argument>|. Dans les faits, la commande~: \python|a = b + c| devient~: \python|a = b.__add__(c)|\footnote{Le principe est le même pour les autres opérateurs}.
+			\item La soustraction peut-être implémentée avec la méthode \python|__sub__(self, argument):|.
+			\item La multipliciation par \python|__mul__(self, argument):|.
+			\item Et la division par \python|__truediv__(self, argument):|.
+		\end{itemize}
+		
+		Les méthodes sont les syntaxes inverses ont les même noms précédés d'un "r". Ainsi, la syntaxe inverse pour l'addition correspond à la méthode spéciale~: \python|__radd__(self, argument):|.
+		
+		En général, les opérateurs sont symétriques, on peut donc définir les méthodes des syntaxes inverses par la syntaxe~: \python|__roperateur__ = __operateur__|.
+		
+		Par exemple~:
+		\begin{pythoncode}
+			class MonType:
+				def __init__(self, attribut):
+					self.attribut = attribut
+				
+				def __add_(self, nombre):
+					return self.attribut + nombre
+				
+				def __radd_(self, nombre):
+					return self.attribut * nombre
+		\end{pythoncode}
+		Et en pratique~:
+		\begin{pythoncode}
+			>>> variable = MonType(2)
+			>>> variable + 5 # __add__
+			7
+			>>> 2 + variable # __radd__
+			10
+		\end{pythoncode}
+		
+		\subsubsection{Appeler une instance de la classe}
+		Lorsque l'on appelle une fonction, on utilise une syntaxe avec des parenthèses. L'idée est la même ici, on va rendre les instances de notre classe "appelables" ainsi, lorsque l'on écrira~: \python|variable(<arguments>)|, Python exécutera une méthode avec les arguments donnés.
+		
+		La méthode en question est~: \python|__call__(self, <arguments>):|. Un petit exemple pour comprendre~:
+		\begin{pythoncode}
+			class MonType:
+				def __init__(self, attribut):
+					self.attribut = attribut
+				
+				def __call__(self, nombre):
+					return self.attribut * nombre
+		\end{pythoncode}
+		Et l'exécution~:
+		\begin{pythoncode}
+			>>> variable = MonType(2)
+			>>> variable(5) # 2 * 5
+			10
+		\end{pythoncode}
+		
+		\subsubsection{Rendre une classe indexable}
+		Un exemple connu d'objet indexable sont les listes, ou les chaînes de caractères. Plus généralement les instances de la classe vont réagir à la syntaxe~: \python|variable[<arguments>]|. On peut mettre à peu près tout et n'importe quoi dans les crochets.
+		
+		La méthode spéciale est ici~: \python|__getitem__(self, arguments):|. Comme tout à l'heure, un exemple~:
+		\begin{pythoncode}
+			class MonType:
+				def __init__(self, attribut):
+					self.attribut = attribut
+				
+				def __getitem__(self, nb):
+					return self.attribut * nb
+		\end{pythoncode}
+		Et avec un exemple d'utilisation~:
+		\begin{pythoncode}
+			>>> variable = MonType(5)
+			>>> variable[2]
+			10
+		\end{pythoncode}
+		
+		\subsubsection{Afficher un objet}
+		Il y a deux manière d'afficher un objet~:
+		\begin{itemize}
+			\item En programmant le transtypage vers le type \python|str| via la méthode spéciale~: \python|__str__(self)|, on affiche alors via la fonction \python|print|.
+			\item En programmant la représentation de l'objet via~: \python|__repr__(self)|, l'affichage se fait alors par un simple appel à la variable.
+		\end{itemize}
+		
+		Dans les deux cas, la fonction va devoir renvoyer la chaîne de caractères.
+		
+		Premier exemple avec le transtypage~:
+		\begin{pythoncode}
+			class MonType:
+				def __init__(self, attribut):
+					self.attribut = attribut
+				
+				def __str__(self):
+					return str(self.attribut) # on renvoie la représentation sous forme de chaîne de caractères
+		\end{pythoncode}
+		En pratique~:
+		\begin{pythoncode}
+			>>> variable = MonType(2)
+			>>> print(variable)
+			2
+		\end{pythoncode}
+		
+		Second exemple avec la représentation~:
+		\begin{pythoncode}
+			class MonType:
+				def __init__(self, attribut):
+					self.attribut = attribut
+				
+				def __repr__(self):
+					return str(self.attribut)
+		\end{pythoncode}
+		Et~:
+		\begin{pythoncode}
+			>>> variable = MonType(2)
+			>>> variable
+			2
+		\end{pythoncode}
+		
+		\subsubsection{Récapitulatif}
+			
+		\begin{tabular}{|c|c|} \hline
+			Méthode spéciale & Effet \\ \hline \hline
+			\python|__init__| & Initialiser l'objet \\ \hline
+			\python|__add__| & Addition \\ \hline
+			\python|__sub__| & Soustraction \\ \hline
+			\python|__mul__| & Multiplication \\ \hline
+			\python|__truediv__| & Division \\ \hline
+			\python|__call__| & Rendre une classe appelable \\ \hline
+			\python|__getitem__| & Rendre une classe indexable\\ \hline
+			\python|__str__| et \python|__repr__| & Afficher un objet \\ \hline
+		\end{tabular}
+	
+	\subsection{Héritages}
+		
+		En Python, et dans les autres langages orientés objets aussi, une classe peut hériter des méthodes et attributs d'une autre classe. Ainsi, la nouvelle classe contiendra toute les méthodes de la classe dont elle a héritée plus de nouvelles méthode (ou attributs) qui seront rajoutés "par dessus" la classe d'origine.
+		
+		Pour faire en sorte qu'une classe \python|ClassA| hérite d'une classe \python|ClassB|, on écrit~: \python|class ClassA(ClassB)|.
+		
+		Ici, nous allons nous intéresser à un exemple un peu plus concret que ceux vu plus haut dans ce chapitre~: nous allons créer un nouveau type de chaînes de caractères, basé sur les \python|str|. Nous allons donc commencer par~:
+		\begin{pythoncode}
+			class Str(str): # Python est sensible à la casse, donc pas de risque
+				def __init__(self, valeur):
+					self.data = valeur
+				
+				def methode(self):
+					return 42
+		\end{pythoncode}
+		Ici, les instances de classe \python|Str| vont se comporter exactement comme des chaînes de caractères normale, mais on peut leur appliquer la méthode \python|methode()| qui renvoie 42.
+		\begin{pythoncode}
+			>>> variable = Str("Ceci est une chaîne")
+			>>> variable.methode()
+			42
+		\end{pythoncode}
+		
+		On peut également s'amuser à redéfinir les opérateurs sur les entiers~:
+		\begin{pythoncode}
+			class Int(int):
+				def __init__(self, valeur):
+					self.valeur = valeur
+				
+				def __add__(self, b):
+					return self.valeur * b
+				
+				def __sub__(self, b):
+					return self.valeur + b
+				
+				def __mul__(self, b):
+					return self.valeur / b
+				
+				def __truediv__(self, b):
+					return self.valeur - b
+		\end{pythoncode}
+		Et pour montrer les effets~:
+		\begin{pythoncode}
+			>>> var_a = Int(2)
+			>>> var_b = Int(5)
+			>>> var_a + var_b
+			10
+			>>> var_a # __repr__ n'est pas programmée, mais l'héritage fait que la méthode fonctionne
+			2
+			>>> var_a / var_b
+			7
+		\end{pythoncode}
+
+\section{Mise en pratique}
+		Il y a beaucoup d'objets mathématiques qui ne sont pas programmé en Python, ce qui nous fournit l'occasion de quelques exemples.
+
+	\subsection{Vecteurs} \label{appl:vecteurs} (Corrigé~: \ref{corr:vecteurs})
+		Un premier exemple de programmation orientée objet~: les vecteurs. Le but va être de construire un objet \python|Vecteur| qui permettra les opérations suivantes~:
+		\begin{itemize}
+			\item addition de deux vecteurs
+			\item multiplication par un scalaire
+		\end{itemize}
+		On pourra afficher le vecteur comme un tuple.
+	
+	\subsection{Polynômes} \label{appl:polynomes} (Corrigé~: \ref{corr:polynomes})		
+		Cet exemple, par rapport au précédent, est plus complexe d'un point de vue mathématiques car les opérations sur les polynômes sont plus délicates à programmer que les opérations sur les vecteurs. Mais d'un point de vue informatique, les fonctions et méthodes entrant en jeux sont du même ordre de grandeur en termes de difficulté.
+		
+		La classe \python|Polynome| devra~:
+		\begin{itemize}
+			\item gérer les opérations élémentaires sur les polynômes (addition et soustraction)
+			\item permettre un affichage du polynôme (sous la forme \python|c + bX + aX^2|)
+			\item gérer l'opération de dérivation via une méthode à part.
+			\item permettre l'évaluation du polynôme en une valeur précise.
+		\end{itemize}
+		
+		Quelques rappels pour donner des pistes ou aider à mieux comprendre l'objet mathématique~:
+		\begin{enumerate}
+			\item Un polynôme s'écrit sous la forme~: $\sum_{i = 0}^n a_i \cdot X^i$ où $n$ est son degré et où $(a_n)_{n \in \llbracket 0~;\ n \rrbracket}$ sont ses coefficients
+			\item Un polynôme est entièrement défini par la donnée de ses coefficients.
+			\item L'addition et la soustraction se font terme à terme et le degré du résultat correspond au degré maximal des deux polynômes.
+			\item La dérivation a une formule explicite~: $\sum_{i = 1}^n ia_i \cdot X^{i - 1}$.
+		\end{enumerate} 
+	
+	
+	
+

@@ -1,0 +1,398 @@
+\section{Chaînes de caractères} \label{str}
+
+	\subsection{Introduction aux chaînes de caractères}
+	
+		Une chaîne de caractères est une suite ordonnée de caractères (lettres, nombres, etc.).
+		À noter qu'il peut s'agir également d'une chaîne vide (qui ne contient aucun caractère) ou d'une chaîne à un seul caractère.
+		La seule chose importante est de bien mettre la chaîne entre guillemets lors de l'initialisation.
+		
+	\subsection{La concaténation}
+	
+		Pour concaténer ("coller bout à bout") deux chaînes de caractères, il suffit de les "additionner"~:
+		\begin{pythoncode}
+			>>> ma_chaine1 = "Bonjour "
+			>>> ma_chaine2 = "tout le monde !"
+			>>> ma_chaine1 + ma_chaine2
+			'Bonjour tout le monde !'
+		\end{pythoncode}
+	
+	\subsection{La répétition}
+
+		(Le terme n'est pas officiel) L'opérateur \python|*| sert à multiplier une chaîne de caractères par un nombre entier $p$. On obtient la chaîne donnée en entrée concaténée $p$ fois avec elle-même~:
+		\begin{pythoncode}
+			>>> "abc" * 3
+			'abcabcabc'
+			>>> ma_chaine = "Une chaîne "
+			>>> ma_chaine * 2
+			'Une chaîne Une chaîne'
+		\end{pythoncode}
+	
+	\subsection{Longueur d'une chaîne de caractères} \label{len}
+		
+		On utilise la fonction \python|len|~: \python|len(ma_chaine)| renvoie le nombre de lettres de la chaîne.
+
+		\begin{pythoncode}
+			>>> ma_chaine = "Bonjour"
+			>>> len(ma_chaine)
+			7
+		\end{pythoncode}
+	
+	\subsection{Accéder à un caractère de la chaîne}
+	
+		Une chaîne de caractères peut être schématisée par un tableau. Chaque case du tableau vérifie~:
+		\begin{itemize}
+			\item chaque case contient une lettre.
+			\item chaque case est repérée par deux indices, l'un positif partant du début de la chaine et l'autre strictement négatif partant de la fin de la chaine
+		\end{itemize}
+		Prenons l'exemple de la chaîne \python|"Bonjour"|~: \\
+		
+		\begin{tabular}{|*{7}{c|}} \hline
+			 B &  o &  n &  j &  o &  u &  r \\ \hline
+			 0 &  1 &  2 &  3 &  4 &  5 &  6 \\ \hline
+			-7 & -6 & -5 & -4 & -3 & -2 & -1 \\ \hline
+		\end{tabular} \\
+		
+		On accède à un caractère de la chaine en écrivant~: \python|ma_chaine[indice]| avec \python|indice|, un indice du caractère de la chaîne.
+		\begin{pythoncode}
+			>>> ma_chaine = "Bonjour"
+			>>> ma_chaine[0]
+			'B'
+			>>> ma_chaine[3]
+			'j'
+			>>> ma_chaine[-7]
+			'B'
+			>>> ma_chaine[-4]
+			'j'
+		\end{pythoncode}
+
+	\subsection{Extraction d'une sous-chaînes de caractères}
+		
+		Une manipulation un peu plus délicate sur les chaînes de caractères est d'extraire une sous-chaîne.
+		On utilise alors la syntaxe \python|ma_chaine[debut: fin]| avec \python|debut| l'indice du premier caractère à prendre et \python|fin| l'indice du dernier caractère (ce caractère ne sera pas compris dans la sous-chaîne extraite).
+		
+		Il existe des variantes de cette syntaxe selon l'usage voulu~:
+		\begin{itemize}
+			\item \python|ma_chaine[:fin]| pour prendre du début de la chaîne jusqu'à \python|fin| (syntaxe équivalente de \python|ma_chaine[0: fin]|).
+			\item \python|ma_chaine[debut:]| pour prendre à partir de \python|debut| jusqu'au dernier caractère (inclus).
+		\end{itemize}
+		
+		Quelques exemples~:
+		\begin{pythoncode}
+			>>> ma_chaine = "Ceci est une phrase"
+			>>> ma_chaine[:4]
+			'Ceci'
+			>>> ma_chaine[5: 8]
+			'est'
+			>>> ma_chaine[-6:]
+			'phrase'
+		\end{pythoncode}
+	
+	\subsection{Appartenance d'une chaîne à une autre}
+		
+		Pour tester si une chaîne de caractères est incluse dans une autre, on utilise le mot-clef \python|in|~: \python|chaine_1 in chaine_2|.
+		Cette syntaxe renvoie \python|True| si \python|chaine_1| est incluse dans \python|chaine_2|.
+		
+		Quelques exemples~:
+		
+		\begin{pythoncode}
+			>>> ma_chaine = "Ceci est une phrase"
+			>>> "u" in ma_chaine
+			True
+			>>> "est" in ma_chaine
+			True
+			>>> "bonjour" in ma_chaine
+			False
+		\end{pythoncode}
+	
+	\subsection{Caractères spéciaux}
+		
+		Il est parfois nécessaire de stocker dans une chaîne de caractères des caractères spéciaux. Ces caractères peuvent être, entre autres, un retour à la ligne, une tabulation, des guillemets etc.
+		
+		Tout ces caractères spéciaux sont introduit par la syntaxe~: \python|\<caractère>|. \\
+		\begin{tabular}{|c|c|} \hline
+			Syntaxe & Effet \\ \hline \hline
+			\python|\n| & retour à la ligne \\ \hline
+			\python|\t| & tabulation \\ \hline
+			\python|\"| & guillemet \\ \hline
+		\end{tabular}
+		Il en existe d'autre, mais l'intérêt étant plutôt limité, ne sont présenté ici que les plus courants.
+		
+		Par exemple~:
+		\begin{pythoncode}
+			>>> ma_chaine = "Ceci est sur une ligne\nEt ça sur une autre\nOn peut du texte entre \"guillemets\""
+			>>> print(ma_chaine)
+			Ceci est sur une ligne
+			Et ça sur une autre
+			On peut mettre du texte entre "guillemets"
+		\end{pythoncode}
+		
+\section{Listes} \label{list}
+
+	\subsection{Introduction aux listes}
+		
+		Une liste est une$\ldots$ liste de variables. On parle de type composé.
+		Quelques points importants sur les listes~:
+		\begin{itemize}	
+			\item Pour désigner une variable de la liste, on parle d'élément de la liste
+			\item On accède à un élément de la liste via la syntaxe~: \python|ma_liste[indice]| avec \python|indice| un indice de l'élément dans la liste.
+			\item Les indices sont doubles, exactement comme pour les chaînes de caractères (voir~\ref{str})
+		\end{itemize}
+		
+		Les listes ont beaucoup de points communs avec les chaînes de caractères, notamment au niveau des indices et de l'extraction de sous-listes.
+		Ce type possède néanmoins de nombreuses autres fonctionnalités.
+	
+	\subsection{Initialiser une liste}
+		
+		Contrairement aux entiers ou aux chaînes de caractères il y a plusieurs méthodes pour initialiser une liste. La première et la plus intuitive est de placer les éléments de la liste entre crochets (on dit alors que la liste est définie en extension)~:
+		\begin{pythoncode}
+			>>> ma_liste = [1, 2, 3]
+			>>> ma_liste
+			[1, 2, 3]
+		\end{pythoncode}
+		
+		Une autre méthode d'initialisation est plus délicate et nécessite d'avoir vu les boucles itératives \python|for| (voir~\ref{for}).
+		L'idée est de remplir une liste grâce à une boucle itérative, on parle alors de liste définie en compréhension. La syntaxe est~: \python|ma_liste = [val for i in range(n)]|, ce qui crée une liste de longueur \python|n|, et chaque élément de la liste vaut \python|val|.
+		On peut imaginer plusieurs cas de figures~:
+		
+		\begin{pythoncode}
+			>>> ma_liste = [0 for _ in range(4)]
+			>>> ma_liste
+			[0, 0, 0, 0]
+			>>> ma_liste = [i for i in range(5)]
+			>>> ma_liste
+			[0, 1, 2, 3, 4]
+			>>> ma_liste = [i ** 2 for i in range(1, 6)]
+			>>> ma_liste
+			[1, 4, 9, 16, 25]
+		\end{pythoncode}
+		
+	\subsection{Accéder à l'élément d'une liste}
+		
+		Le premier élément de la liste est à l'indice 0, et on appelle l'élément $n$ de la liste grâce à la syntaxe : \python|ma_liste[n]|.
+		\begin{pythoncode}
+			>>> ma_liste = [1, 2, 3]
+			>>> ma_liste[0]
+			1
+			>>> ma_liste[1]
+			2
+			>>> ma_liste[3] # Si on sort de la liste, Python renvoie une erreur
+			IndexError: list index out of range
+		\end{pythoncode}
+		
+		Comme pour les chaînes de caractères, on peut accéder à un élément en partant de la fin~:
+		\begin{pythoncode}
+			>>> ma_liste = [1, 2, 3]
+			>>> ma_liste[-1]
+			3
+		\end{pythoncode}
+	
+	\subsection{Longueur d'une liste}
+		
+		C'est exactement la même chose que pour les chaînes de caractères (voir~\ref{len}). La fonction renvoie alors le nombre d'éléments de la liste.
+		
+		\begin{pythoncode}
+			>>> ma_liste = [1, 2, 3]
+			>>> len(ma_liste)
+			3
+		\end{pythoncode}
+	
+	\subsection{Extraire une sous-liste} \label{slicing}
+		
+		Comme pour les chaînes de caractères, on peut extraire une sous-liste de la liste. La syntaxe et le principe sont les mêmes.
+		Donnons quelques exemples~:
+		
+		\begin{pythoncode}
+			>>> ma_liste = [1, 2, 3, 4, 5]
+			>>> ma_liste[:3]
+			[1, 2, 3]
+			>>> ma_liste[-3: -2]
+			[3]
+		\end{pythoncode}
+	
+	\subsection{Concaténer deux listes}
+	
+		Comme pour les chaînes de caractères, on utilise l'opérateur \python|+|~:
+		\begin{pythoncode}
+			>>> ma_liste1 = [1, 2, 3]
+			>>> ma_liste2 = [4, 5, 6]
+			>>> ma_liste1 + ma_liste2
+			[1, 2, 3, 4, 5, 6]
+		\end{pythoncode}
+	
+	\subsection{Répétition d'une liste}
+		
+		L'idée est la même que pour les chaînes de caractères~: la liste va être dupliquée (concaténée à elle-même autant de fois qu'il est indiqué).
+		\begin{pythoncode}
+			>>> ma_liste = [1, 2]
+			>>> ma_liste * 3
+			[1, 2, 1, 2, 1, 2]
+			>>> [0] * 5
+			[0, 0, 0, 0, 0]
+			>>> [0] * 3 + [1, 2] * 2
+			[0, 0, 0, 1, 2, 1, 2]
+		\end{pythoncode}
+	
+	\subsection{Chercher un élément}
+		
+		Pour savoir si un élément est dans une liste, on utilise le mot-clef \python|in|, dans la syntaxe~: \python|element in ma_liste| avec \python|element| l'élément recherché.
+		
+		Cette syntaxe renvoie un booléen (à savoir \python|True| ou \python|False|) on peut donc s'en servir comme d'une condition.
+		Par exemple, dans un petit script~:
+		
+		\begin{pythoncode}
+			# On calcule les carrés de 1 à 50
+			carres = [i ** 2 for i in range(1, 51)]
+			
+			if 49 in carres:
+				print("49 est dans la liste")
+			else:
+				print("49 n'est pas dans la liste")
+		\end{pythoncode}
+			
+	\subsection{Ajouter un élément à la fin d'une liste}
+		
+		La syntaxe n'est pas évidente~: \python|ma_liste.append(element)| avec \python|ma_liste| une liste et \python|element| l'élément à ajouter à la fin.
+		\begin{pythoncode}
+			>>> ma_liste = [1, 2, 3]
+			>>> ma_liste
+			[1, 2, 3]
+			>>> ma_liste.append(4)
+			>>> ma_liste
+			[1, 2, 3, 4]
+			>>> ma_liste.append("Coucou")
+			>>> ma_liste
+			[1, 2, 3, 4, "Coucou"]
+		\end{pythoncode}
+	
+	\subsection{Enlever un élément}
+	
+		\subsubsection{Par valeur}
+		On peut enlever un élément d'une liste selon sa valeur. La syntaxe est alors \python|ma_liste.remove(valeur)| avec \python|valeur|, la valeur de l'élément que l'on veut enlever. À noter que cela ne supprime que la première occurrence de la valeur.
+		\begin{pythoncode}
+			>>> ma_liste = [0] * 3 + [1, 2] * 2
+			>>> ma_liste
+			[0, 0, 0, 1, 2, 1, 2]
+			>>> ma_liste.remove(0)
+			>>> ma_liste
+			[0, 0, 1, 2, 1, 2]
+			>>> ma_liste.remove(2)
+			>>> ma_liste
+			[0, 0, 1, 1, 2]
+		\end{pythoncode}
+		
+		\subsubsection{Par indice} On cherche à supprimer un élément d'indice donné. On a la syntaxe~: \python|ma_liste.pop(indice)|, avec \python|indice| un indice de l'élément à supprimer.
+		\begin{pythoncode}
+			>>> ma_liste = [0] * 3 + [1, 2] * 2
+			>>> ma_liste
+			[0, 0, 0, 1, 2, 1, 2]
+			>>> ma_liste.pop(0)
+			0
+			>>> ma_liste
+			[0, 0, 1, 2, 1, 2]
+			>>> ma_liste.pop(2)
+			1
+			>>> ma_liste
+			[0, 0, 2, 1, 2]
+		\end{pythoncode}
+		Il peut être utile de savoir que \python|.pop|, contrairement à \python|.remove|, renvoie la valeur de l'élément supprimé.
+
+\section{Dictionnaires}
+	
+	\subsection{Introductions aux dictionnaires}
+		
+		Un dictionnaire est un ensemble de couples. Le premier élément de chaque couple est appelé "clef" et le second est appelé "valeur".
+		Le principe du dictionnaire consiste à permettre de retrouver la valeur sur la donnée de la clef (i.e. si on connaît la clef, on peut retrouver la valeur.). Attention, la réciproque est fausse, si on connait une valeur, rien ne garantit que nous allons pouvoir remonter jusqu'à la clef.
+		
+		On peut faire une analogie avec les dictionnaires au sens usuel du terme~: si on connaît l'orthographe d'un mot (la clef) on peut trouver sa définition (la valeur).
+		Mais si nous n'avons que la définition, retrouver le mot en fouillant dans le dictionnaire risque d'être long$\ldots$
+		
+	\subsection{Définir un dictionnaire}
+		
+		Il existe plusieurs manières de définir un dictionnaire.
+		
+		La plus courante est sans doute de commencer par définir un dictionnaire vide, puis de le remplir à l'aide d'une boucle. On écrit alors~: \python|mon_dico = {}|.
+		
+		On peut également déclarer un dictionnaire avec la donnée d'un ensemble de couple clef-valeur~: \python|mon_dico = {clef_1: valeur_1, clef_2: valeur_2, ...}|
+		
+		Par si on veut prendre pour clef le nom d'une personne et pour valeur son adresse mail~:
+		\begin{pythoncode}
+			>>> mon_dico = {"Emmanuel Macron": "manu@gouv.fr", "Jean Michel Blanquer": "jean_michou@gouv.fr"}
+			>>> mon_dico = {} # un dictionnaire vide
+			>>> mon_dico = {1: [1, 2, 3], "b": 12} # autre exemple
+		\end{pythoncode}
+	
+	\subsection{Longueur d'un dictionnaire}
+		
+		Comme pour les chaînes et les listes (voir~\ref{len}). La fonction \python|len| renvoie alors le nombre de couple du dictionnaire~:
+		
+		\begin{pythoncode}
+			>>> mon_dico = {"a": [1, 2, 3], "b": [4, 5, 6]}
+			>>> len(mon_dico)
+			2
+		\end{pythoncode}
+	
+	\subsection{Ajouter un couple clef-valeur à un dictionnaire}
+		
+		La syntaxe est assez simple~: \python|mon_dico[nouvelle_clef] = valeur|, avec \python|nouvelle_clef| la clef à ajouter et \python|valeur| la valeur correspondante.
+
+		\begin{pythoncode}
+			>>> mails = {}
+			>>> mails["Manu"] = "manu@exemple.fr"
+			>>> mails
+			{'Manu': 'manu@exemple.fr'}
+		\end{pythoncode}
+	
+	\subsection{Lire la valeur à partir d'une clef}
+		
+		La syntaxe est proche de celle vu juste au-dessus~: \python|mon_dico[clef]|, avec \python|clef| la clef qui correspond à la valeur que l'on souhaite avoir. Cette syntaxe retourne la valeur.
+		
+		\begin{pythoncode}
+			>>> mails = {"Manu": "manu@exemple.fr"}
+			>>> mails["Seb"] = "sebastien@osef.com" # on ajoute l'adresse mail de Seb
+			>>> mails["Manu"]
+			'manu@exemple.fr',
+			>>> mails["Seb"]
+			'sebastien@osef.com'
+		\end{pythoncode}
+	
+	\subsection{Savoir si une clef est enregistrée dans un dictionnaire}
+		
+		Pour savoir si une clef est dans un dictionnaire, il faut utiliser la syntaxe~: \python|clef in mon_dico|. Comme pour les chaînes de caractères et les listes, cela renvoie un booléen.
+		
+		Attention, il s'agit bien d'un test sur les clefs, et non les valeurs.
+		
+		\begin{pythoncode}
+			>>> mon_dico = {"a": [1, 2, 3], "b": [4, 5, 6]}
+			>>> "b" in mon_dico
+			True
+			>>> [1, 2, 3] in mon_dico
+			False
+		\end{pythoncode}
+	
+	\subsection{Retirer un couple clef-valeur d'un dictionnaire}
+		
+		La syntaxe est proche de celle sur les listes~: \python|mon_dico.pop(clef)|, avec \python|clef|, la clef du couple à supprimer.
+		Comme sur les listes, cette syntaxe renvoie la valeur supprimée.
+		
+		\begin{pythoncode}
+			>>> mon_dico = {1: "a", 2: "b", 3: "c"}
+			>>> mon_dico.pop(1)
+			'a'
+			>>> mon_dico
+			{2: 'b', 3, 'c'}
+			>>> mon_dico.pop("c")
+			KeyError: 'c'
+		\end{pythoncode}
+
+			
+		
+		
+			
+			
+		
+		
+		
+		
+		
+
+
