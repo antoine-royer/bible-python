@@ -68,6 +68,92 @@
 		\subsubsection{Retourner un résultat}
 		Une fonction renvoie toujours quelque chose. Si on ne précise pas quoi renvoyer (avec \python|return|), alors la fonction renvoie "rien", ce qui en Python se dit \python|None|.
 	
+	\subsection{Manipulations avancées sur les arguments de fonction}
+		En Python les arguments d'une fonction sont séparés en trois types~:
+		\begin{itemize}
+			\item Les arguments positionnels qui ne sont interprété par la fonction que par leur position lors de l'appel à la fonction.
+			\item les arguments par mot-clef qui sont interprété uniquement par leur nom.
+			\item les arguments les plus courants qui supportent les deux types précédent.
+		\end{itemize}
+		À la fin de cette partie, une courte section sera dédiée aux arguments optionnels qui peuvent être des trois types ci-dessus.
+		
+		\subsubsection{Arguments positionnels}
+		Les arguments positonnels (et seulement positionnels) doivent être donnés dans le même ordre que celui utilisé lors de la définition de la fonction. Pour les utiliser, il faut mettre un \python|/| dans les arguments de la fonction après les arguments positionnels~:
+		\begin{pythoncode}
+			def fonction(arg1, arg2, /):
+			    print(arg1, arg2)
+			
+			fonction(1, 2) # affiche "1 2"
+			fonction(1, arg2=2) # renvoie une TypeError
+		\end{pythoncode}
+		Lors de l'appel à la fonction, il n'est donc pas possible de passer un argument par son nom et la seule manière de passer cet argument à la fonction est de le passer dans l'ordre défini. Il est possible de donner un nombre arbitraire d'argument positionnels grâce à la syntaxe~:
+		\begin{pythoncode}
+			def fonction(*args):
+			    print(args)
+			
+			fonction(1, 2, 3) # affiche "(1, 2, 3)"
+			fonction(1, "texte", [1, 2, 3]) # affiche "(1, 'texte', [1, 2, 3])"
+		\end{pythoncode}
+		
+		\subsubsection{Argument par mot-clef}
+		À l'inverse des arguments positionnels, les arguments par mot-clef ne peuvent être passés que s'ils sont précédés par leur nom lors de l'appel à la fonction. L'ordre dans lequel ces arguments sont passés n'a aucune importance. Pour forcer des arguments en arguments par mot-clef seuleument, il faut utiliser la syntaxe~:
+		\begin{pythoncode}
+			def fonction(*, arg1, arg2):
+			    print(arg1, arg2)
+			
+			fonction(1, 2) # renvoie une TypeError
+			fonction(arg1=1, arg2=2) # affiche "1 2"
+			fonction(arg2=2, arg1=1) # affiche "1 2"
+		\end{pythoncode}
+		À l'instar des arguments positionnels il est possible de passer un nombre arbitraire d'arguments par mot-clef à une fonction grâce à la syntaxe~:
+		\begin{pythoncode}
+			def fonction(**kwargs):
+			    print(kwargs)
+			
+			fonction(arg1=1, arg2=2) # affiche "{'arg1': 1, 'arg2': 2}"
+		\end{pythoncode}
+		
+		\subsubsection{Arguments de base}
+		Ce dernier d'argument est à la fois le plus simple et le plus courant, et il supporte les deux types précédent. Cet argument peut donc être appelé par son nom (et l'ordre n'a pas d'importance) ou alors sans le nom, et dans ce cas-là, c'est leur position qui est déterminante.
+		\begin{pythoncode}
+			def fonction(arg1, arg2, arg3):
+			    print(arg1, arg2, arg3)
+			
+			fonction(1, arg3=3, arg2=2) # affiche "1 2 3"
+			fonction(1, 2, 3) # affiche "1 2 3"
+		\end{pythoncode}
+		
+		Ainsi, une fonction qui utilise les trois types d'arguments pourrait s'écrire comme~:
+		\begin{pythoncode}
+			def fonction(positionnel_1, positionnel_2, /, arg1, arg2, *, kwarg1, kwarg2):
+			    pass
+		\end{pythoncode}
+		
+		De la même manière une fonction qui pourrait prendre en compte n'importe quel nombre d'argument de n'importe quel type s'écrit~:
+		\begin{pythoncode}
+			def fonction(*args, **kwargs):
+			    pass
+		\end{pythoncode}
+		Cette méthode d'appel peut-être utile pour préciser des options dans une fonction (comme c'est le cas pour beaucoup de fonction de la bibliothèque \python|matplotlib|) ou exécuter une fonction dont on ne connaît a priori pas les arguments.
+		
+		\subsubsection{Argument par défaut}
+		Il est possible de préciser une valeur par défault pour n'importe quel argument d'une fonction, en ajoutant \python|=valeur| dans la définition dans la fonction. La seule précaution à prendre est qu'un argument ayant une valeur par défaut ne peut pas précéder un argument sans valeur par défaut.
+		\begin{pythoncode}
+			def fonction(arg1, arg2=2):
+			    print(arg1, arg2)
+			
+			fonction(1) # affiche "1 2"
+			fonction(1, 3) # affiche "1 3"
+		\end{pythoncode}
+		
+		Inversement, la syntaxe suivante est invalide~:
+		\begin{pythoncode}
+			def fonction(arg1=1, arg2):
+			    print(arg1, arg2)
+		\end{pythoncode}
+		
+		Les arguments par défault sont cumulables avec les types d'arguments précédemment, il est ainsi possible d'avoir des arguments positonnel ou par mot-clef ayant une valeur par défaut.
+	
 	\subsection{La récursivité, c'est la récurvité, mais en plus simple}
 		
 		\subsubsection{Définition de la récursivité}
@@ -88,11 +174,11 @@
 			\item Soit cette condition est fausse et l'on appelle la fonction récursive avec des arguments différents.
 		\end{itemize}
 		
-		Cette mise en place est particulièrement simple sur des exemples mathématiques où l'on veut programmer une formule donnée par récurrence. Le principe est le même ici. 
+		Cette mise en place est particulièrement simple sur des exemples mathématiques où l'on veut programmer une formule donnée par récurrence. Le principe est le même ici.
 		
 		\subsubsection{Mise en pratique}
 		À titre d'exemple reprenons la construction de la fonction factorielle~:
-		\[	n! = \left \{ \begin{array}{ll}
+		\[ n! = \left \{ \begin{array}{ll}
 			1 & \quad \textrm{si $n = 0$} \\
 			n \cdot (n - 1)! & \quad \textrm{sinon}
 		\end{array} \right . \]
