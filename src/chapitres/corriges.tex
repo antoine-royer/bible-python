@@ -268,16 +268,16 @@
 		On ajoute ensuite le monôme à la liste. Et enfin on utilise \python|join| pour intercaler un signe \python|+| entre chaque monôme. Ainsi~:
 		\begin{pythoncode}
 			def __repr__(self):
-		    monomes = []
-		    for puissance in range(self.nb_coeff):
-		        if self.coefficients[puissance] != 0:
-		            if puissance == 0:
-		                monomes.append(str(self.coefficients[puissance]))
-		            elif puissance == 1:
-		                monomes.append(str(self.coefficients[puissance]) + "X")
-		            else:
-		                monomes.append(str(self.coefficients[puissance]) + "X^" + str(puissance))
-		    return " + ".join(monomes)
+			    monomes = []
+			    for puissance in range(self.nb_coeff):
+				if self.coefficients[puissance] != 0:
+				    if puissance == 0:
+				        monomes.append(str(self.coefficients[puissance]))
+				    elif puissance == 1:
+				        monomes.append(str(self.coefficients[puissance]) + "X")
+				    else:
+				        monomes.append(str(self.coefficients[puissance]) + "X^" + str(puissance))
+			    return " + ".join(monomes)
 		\end{pythoncode}
 		
 		On peut également écrire~: \python|__str__ = __repr__| pour pouvoir transtyper le polynôme vers une chaîne de caractères.
