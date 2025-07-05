@@ -1,0 +1,84 @@
+% General packages
+\usepackage{amsfonts, amssymb, amsthm}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage{empheq, environ} % packages for system environment
+\usepackage{calrsfs} % better mathcal letters
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{svg} % include svg files with \includesvg (like \includegraphics)
+\usepackage{subcaption}
+\usepackage{xcolor}
+
+% Layout
+\usepackage{fancyhdr, fancyvrb}
+\usepackage{lastpage}
+\usepackage[left=2.0cm, right=2.0cm, top = 2.0cm, bottom = 2.0cm]{geometry}
+\usepackage{lettrine, yfonts}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{minitoc}
+\usepackage[hyperindex=true, colorlinks, linkcolor=blue, urlcolor=blue, citecolor=blue, breaklinks=true]{hyperref}
+\everymath{\displaystyle}
+
+
+% Language
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{babel}
+
+
+% Customs commands and environnements
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\renewcommand{\ker}{\mathrm{Ker\,}}
+\renewcommand{\vec}{\overrightarrow}
+\newcommand{\im}{\mathrm{Im\,}}
+\newcommand{\derivative}[3]{\frac{\mathrm{d}^{#3} #1}{\mathrm{d}#2^{#3}}}
+\newcommand{\partderivative}[3]{\frac{\partial^{#3} #1}{\partial #2^{#3}}}
+\newcommand{\nnchapter}[1]{
+	\chapter*{#1}
+	\addstarredchapter{#1}
+	\markboth{\uppercase{#1}}{}
+}
+\newcommand{\nnsection}[1]{
+	\section*{#1}
+	\addstarredsection{#1}
+	\markboth{\uppercase{#1}}{}
+}
+
+\def\restriction#1#2{\mathchoice
+              {\setbox1\hbox{${\displaystyle #1}_{\scriptstyle #2}$}
+              \restrictionaux{#1}{#2}}
+              {\setbox1\hbox{${\textstyle #1}_{\scriptstyle #2}$}
+              \restrictionaux{#1}{#2}}
+              {\setbox1\hbox{${\scriptstyle #1}_{\scriptscriptstyle #2}$}
+              \restrictionaux{#1}{#2}}
+              {\setbox1\hbox{${\scriptscriptstyle #1}_{\scriptscriptstyle #2}$}
+              \restrictionaux{#1}{#2}}}
+\def\restrictionaux#1#2{{#1\,\smash{\vrule height .8\ht1 depth .85\dp1}}_{\,#2}}
+
+\NewEnviron{system}[1][2]
+{
+	\begin{empheq}[left=\empheqlbrace]{alignat=#1}
+        \BODY
+    \end{empheq}
+}
+\NewEnviron{subsystem}[1][2]
+{
+    \begin{subequations}
+    \begin{empheq}[left=\empheqlbrace]{alignat=#1}
+    	\BODY
+    \end{empheq}
+    \end{subequations}
+}
+
+
+% Pagestyle
+\pagestyle{fancy}
+\fancypagestyle{plain}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
